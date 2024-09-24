@@ -1,24 +1,20 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.16"
-    }
-  }
-
-  required_version = ">= 1.2.0"
-}
-
 provider "aws" {
-  region  = "us-west-2"
+  region = "ap-southeast-2"  # Change to your preferred region
 }
 
-resource "aws_instance" "app_server" {
-  ami           = "ami-830c94e3"
-  instance_type = "t2.micro"
+resource "aws_instance" "my_instance" {
+  count         = 3  # This creates three instances
+  ami           = "ami-0bfe89c8e3d79ad82"  # Replace with your desired AMI ID
+  instance_type = "t2.micro"  # Change to your preferred instance type
+  key_name      = "LEO.pem"  # Replace with your EC2 key pair name
 
   tags = {
-    Name = "Terraform_Demo"
+    Name = "MyInstance-${count.index + 1}"
   }
 }
+
+output "instance_ids" {
+  value = aws_instance.my_instance[*].id
+}
+
 
